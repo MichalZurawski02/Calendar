@@ -116,11 +116,9 @@ class MainActivity : AppCompatActivity() {
 
     fun onAddClick(view: View) {
         val intent = Intent(this, EventActivity::class.java)
-        val x = linearLayoutManager.findFirstVisibleItemPosition()
-        intent.putExtra("Day", list[x].dayOfMonth)
-        intent.putExtra("Month", list[x].monthValue)
-        intent.putExtra("Year", list[x].year)
-        Log.i("wtf", list[x].dayOfMonth.toString() + " " + list[x].monthValue.toString() + " " + list[x].year.toString())
+        intent.putExtra("Day", date.dayOfMonth)
+        intent.putExtra("Month", date.monthValue)
+        intent.putExtra("Year", date.year)
         startActivity(intent)
         finish()
     }

@@ -2,10 +2,10 @@ package com.example.calendar
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
@@ -17,6 +17,7 @@ class EventActivity: AppCompatActivity() {
     private lateinit var pickedDate: ZonedDateTime
     private lateinit var datePicker: DatePicker
     private lateinit var titleEdit: EditText
+    private lateinit var backButton: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,7 @@ class EventActivity: AppCompatActivity() {
             .of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
         datePicker = findViewById(R.id.datePicker1)
         titleEdit = findViewById(R.id.editTitle)
+        backButton = findViewById(R.id.backView)
         datePicker.init(year, month - 1, day) { view, year, month, day ->
             pickedDate = ZonedDateTime
                 .of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
@@ -49,6 +51,10 @@ class EventActivity: AppCompatActivity() {
         ).allowMainThreadQueries().addTypeConverter(ZonedDateTimeConverter()).build()
         db.eventDao().insert(event)
 
+        endActivity(view)
+    }
+
+    fun endActivity(view: View) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("Day", pickedDate.dayOfMonth)
         intent.putExtra("Month", pickedDate.monthValue)
