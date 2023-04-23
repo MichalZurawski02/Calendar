@@ -12,7 +12,7 @@ class ZonedDateTimeConverter {
     }
 
     @TypeConverter
-    fun dateToString(date: ZonedDateTime?): String? {
+    fun dateToString(date: ZonedDateTime?): String {
         return date.toString()
     }
 }

@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -22,17 +21,18 @@ class EventActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.event_add_view)
-        var day = intent.getIntExtra("Day", 0)
-        var month = intent.getIntExtra("Month", 0)
-        var year = intent.getIntExtra("Year", 0)
-        initDate = ZonedDateTime.of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
-        Log.i("init", initDate.toString())
-        pickedDate = ZonedDateTime.of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
-        datePicker = findViewById<DatePicker>(R.id.datePicker1)
-        titleEdit = findViewById<EditText>(R.id.editTitle)
+        val day = intent.getIntExtra("Day", 0)
+        val month = intent.getIntExtra("Month", 0)
+        val year = intent.getIntExtra("Year", 0)
+        initDate = ZonedDateTime
+            .of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
+        pickedDate = ZonedDateTime
+            .of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
+        datePicker = findViewById(R.id.datePicker1)
+        titleEdit = findViewById(R.id.editTitle)
         datePicker.init(year, month - 1, day) { view, year, month, day ->
-            pickedDate = ZonedDateTime.of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
-            Log.i("picked", pickedDate.toString())
+            pickedDate = ZonedDateTime
+                .of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
         }
     }
 
@@ -49,7 +49,7 @@ class EventActivity: AppCompatActivity() {
         ).allowMainThreadQueries().addTypeConverter(ZonedDateTimeConverter()).build()
         db.eventDao().insert(event)
 
-        var intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("Day", pickedDate.dayOfMonth)
         intent.putExtra("Month", pickedDate.monthValue)
         intent.putExtra("Year", pickedDate.year)

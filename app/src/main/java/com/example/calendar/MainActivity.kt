@@ -5,14 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.CalendarView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.size
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.CalendarView.OnDateChangeListener
-import androidx.core.view.doOnPreDraw
 import androidx.room.Room
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -37,9 +33,9 @@ class MainActivity : AppCompatActivity() {
         ).allowMainThreadQueries().addTypeConverter(ZonedDateTimeConverter()).build()
 
         if (intent != null) {
-            var day = intent.getIntExtra("Day", 0)
-            var month = intent.getIntExtra("Month", 0)
-            var year = intent.getIntExtra("Year", 0)
+            val day = intent.getIntExtra("Day", 0)
+            val month = intent.getIntExtra("Month", 0)
+            val year = intent.getIntExtra("Year", 0)
             if (day != 0) {
                 date = ZonedDateTime.of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
             }
@@ -48,13 +44,13 @@ class MainActivity : AppCompatActivity() {
         calendarRV = findViewById(R.id.calendarRV)
         LinearSnapHelper().attachToRecyclerView(calendarRV)
         calendarRV.layoutManager = linearLayoutManager
-        calendarAdapter = CalendarAdapter(generateInit(), CalendarView.OnDateChangeListener
-        { view, year, month, dayOfMonth ->
-            var clickedDate = ZonedDateTime
+        calendarAdapter = CalendarAdapter(generateInit(date),
+            CalendarView.OnDateChangeListener { view, year, month, dayOfMonth ->
+            val clickedDate = ZonedDateTime
                 .of(year, month + 1, dayOfMonth, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
             eventAdapter.setEventList(db.eventDao().getByDateTime(clickedDate.toLocalDate().atStartOfDay(clickedDate.zone)))
-        })
-        calendarRV.scrollToPosition(6)
+            })
+        calendarRV.scrollToPosition(list.size/2)
         calendarRV.adapter = calendarAdapter
 
         eventsRV = findViewById(R.id.eventsRV)
@@ -105,16 +101,6 @@ class MainActivity : AppCompatActivity() {
             date = ZonedDateTime.of(getInt(YEAR), getInt(MONTH), getInt(DAY),
                 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
         }
-    }
-
-    private fun generateInit(): MutableList<ZonedDateTime>  {
-        for(i in 6 downTo 0) {
-            list.add(date.minusMonths(i.toLong()))
-        }
-        for(i in 1..6){
-            list.add(date.plusMonths(i.toLong()))
-        }
-        return list
     }
 
     private fun generateInit(date: ZonedDateTime): MutableList<ZonedDateTime>  {
