@@ -48,7 +48,12 @@ class MainActivity : AppCompatActivity() {
         calendarRV = findViewById(R.id.calendarRV)
         LinearSnapHelper().attachToRecyclerView(calendarRV)
         calendarRV.layoutManager = linearLayoutManager
-        calendarAdapter = CalendarAdapter(generateInit())
+        calendarAdapter = CalendarAdapter(generateInit(), CalendarView.OnDateChangeListener
+        { view, year, month, dayOfMonth ->
+            var clickedDate = ZonedDateTime
+                .of(year, month + 1, dayOfMonth, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
+            eventAdapter.setEventList(db.eventDao().getByDateTime(clickedDate.toLocalDate().atStartOfDay(clickedDate.zone)))
+        })
         calendarRV.scrollToPosition(6)
         calendarRV.adapter = calendarAdapter
 
@@ -77,11 +82,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-        var x: CalendarView = calendarRV.findViewHolderForAdapterPosition(0)?.itemView as CalendarView
-        x.setOnDateChangeListener(
-            CalendarView.OnDateChangeListener { view, year, month, dayOfMonth ->
-                Log.i("1", "Year=" + year + " Month=" + month + " Day=" + dayOfMonth)
-            })
     }
 
     companion object {
