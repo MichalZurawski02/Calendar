@@ -37,7 +37,8 @@ class MainActivity : AppCompatActivity() {
             val month = intent.getIntExtra("Month", 0)
             val year = intent.getIntExtra("Year", 0)
             if (day != 0) {
-                date = ZonedDateTime.of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
+                date = ZonedDateTime
+                    .of(year, month, day, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
             }
         }
 
@@ -46,9 +47,9 @@ class MainActivity : AppCompatActivity() {
         calendarRV.layoutManager = linearLayoutManager
         calendarAdapter = CalendarAdapter(generateInit(date),
             CalendarView.OnDateChangeListener { view, year, month, dayOfMonth ->
-            val clickedDate = ZonedDateTime
-                .of(year, month + 1, dayOfMonth, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
-            eventAdapter.setEventList(db.eventDao().getByDateTime(clickedDate.toLocalDate().atStartOfDay(clickedDate.zone)))
+                date = ZonedDateTime
+                    .of(year, month + 1, dayOfMonth, 0, 0, 0, 0, ZoneId.of("Europe/Warsaw"))
+                eventAdapter.setEventList(db.eventDao().getByDateTime(date.toLocalDate().atStartOfDay(date.zone)))
             })
         calendarRV.scrollToPosition(list.size/2)
         calendarRV.adapter = calendarAdapter
